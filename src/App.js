@@ -1,23 +1,78 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useEffect, useState } from "react";
+import "./App.css";
+import { VscDebugRestart, VscDebugStart, VscDebugPause } from "react-icons/vsc";
 function App() {
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [start, setStart] = useState(false);
+
+  const OnStart = () => {
+    setStart(true);
+  };
+
+  const Pause = () => {
+    setStart(false);
+  };
+
+  const Restart = () => {
+    setSeconds(0);
+    setMinutes(0);
+    setHours(0);
+    setStart(false);
+  };
+
+  useEffect(() => {
+    let interval = null;
+    if (start) {
+      interval = setInterval(() => {
+        if (seconds <= 59) {
+          setSeconds((second) => second + 1);
+        }
+        if (seconds > 59) {
+          setMinutes((minute) => minute + 1);
+          setSeconds(0);
+        }
+        if (minutes > 59) {
+          setHours((hour) => hour + 1);
+          setMinutes(0);
+        }
+      },1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [start, seconds, minutes,hours]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="Container">
+        <div className="Clock" title="Stop Watch">
+          <div className="hours">
+            {hours < 10 && <span>0</span>}
+            {hours}
+          </div>
+          <div className="minutes">
+            :{minutes < 10 && <span>0</span>}
+            {minutes}
+          </div>
+          <div className="seconds">
+            :{seconds < 10 && <span>0</span>}
+            {seconds}
+          </div>
+        </div>
+        <div className="btns">
+          <button title="Restart" onClick={Restart}>
+            <VscDebugRestart />
+          </button>
+          <button title="Start" onClick={OnStart}>
+            <VscDebugStart />
+          </button>
+          <button title="Pause" onClick={Pause}>
+            <VscDebugPause />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
