@@ -6,9 +6,11 @@ function App() {
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
   const [start, setStart] = useState(false);
+  const [options, setOptions] = useState(false);
 
   const OnStart = () => {
     setStart(true);
+    setOptions(true);
   };
 
   const Pause = () => {
@@ -37,12 +39,12 @@ function App() {
           setHours((hour) => hour + 1);
           setMinutes(0);
         }
-      },1000);
+      }, 1000);
     } else {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [start, seconds, minutes,hours]);
+  }, [start, seconds, minutes, hours]);
 
   return (
     <div className="App">
@@ -62,15 +64,27 @@ function App() {
           </div>
         </div>
         <div className="btns">
-          <button title="Restart" onClick={Restart}>
-            <VscDebugRestart />
-          </button>
+          {options ? (
+            <button
+              title="Restart"
+              onClick={Restart}
+              className={start && "rotate"}
+            >
+              <VscDebugRestart />
+            </button>
+          ) : undefined}
           <button title="Start" onClick={OnStart}>
             <VscDebugStart />
           </button>
-          <button title="Pause" onClick={Pause}>
-            <VscDebugPause />
-          </button>
+          {options ? (
+            <button
+              title="Pause"
+              onClick={Pause}
+              className={start && "pause-begining "}
+            >
+              <VscDebugPause />
+            </button>
+          ) : undefined}
         </div>
       </div>
     </div>
